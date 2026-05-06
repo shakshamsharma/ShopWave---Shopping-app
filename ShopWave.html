@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ShopWave</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--or:#FF5C00;--orl:#FFF1EB;--ord:#CC4900;--bg:#F5F5F7;--wh:#fff;--tx:#111;--mu:#888;--br:#EBEBEB;--gn:#18A558;--gnl:#E8F7EE;--rd:#E53935;--rdl:#FDEAEA;--st:#FFB800;--f:'Plus Jakarta Sans',sans-serif}
+html,body{min-height:100vh;background:#111;display:flex;justify-content:center;align-items:flex-start;padding:24px 0 48px;font-family:var(--f)}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.lbl{color:rgba(255,255,255,.28);font-size:11px;letter-spacing:.5px}
+.phone{width:393px;height:852px;background:var(--bg);border-radius:54px;overflow:hidden;position:relative;box-shadow:0 0 0 11px #1c1c1e,0 0 0 13px #3a3a3c,0 0 0 14px #1c1c1e,0 48px 100px rgba(0,0,0,.75)}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:122px;height:34px;background:#000;border-radius:20px;z-index:400;display:flex;align-items:center;justify-content:center;gap:8px}
+.island-c{width:11px;height:11px;background:#111;border-radius:50%;border:2px solid #1e1e1e}
+.island-p{width:62px;height:9px;background:#111;border-radius:5px}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);opacity:0;transition:transform .34s cubic-bezier(.4,0,.2,1),opacity .34s;z-index:1}
+.scr.active{transform:none;opacity:1;z-index:10}
+.scr.out{transform:translateX(-20%);opacity:0;z-index:5}
+.st{height:58px;flex-shrink:0}
+.sc{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.sc::-webkit-scrollbar{display:none}
+.dv{height:8px;background:var(--bg);flex-shrink:0}
+.row{display:flex;align-items:center}
+.tb{display:flex;align-items:center;padding:8px 16px 10px;background:var(--wh);border-bottom:1px solid var(--br);gap:10px;flex-shrink:0;min-height:52px}
+.tb-t{font-size:18px;font-weight:800;color:var(--tx);flex:1}
+.ib{width:38px;height:38px;border-radius:50%;border:none;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;position:relative;transition:background .15s;flex-shrink:0;font-family:var(--f)}
+.ib:active{background:var(--br)}
+.bn{display:flex;background:var(--wh);border-top:1px solid var(--br);flex-shrink:0;padding-bottom:8px}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 2px;cursor:pointer;gap:2px;border:none;background:none;font-family:var(--f)}
+.bni-ic{font-size:22px;transition:transform .15s}
+.bni:active .bni-ic{transform:scale(.82)}
+.bni-lb{font-size:10px;font-weight:700;color:var(--mu)}
+.bni.on .bni-lb{color:var(--or)}
+.bp{background:var(--or);color:#fff;border:none;border-radius:14px;height:50px;font-size:15px;font-weight:800;cursor:pointer;font-family:var(--f);transition:background .15s,transform .1s;box-shadow:0 4px 14px rgba(255,92,0,.28)}
+.bp:active{background:var(--ord);transform:scale(.97)}
+.bs{background:var(--wh);color:var(--or);border:2.5px solid var(--or);border-radius:14px;height:50px;font-size:15px;font-weight:800;cursor:pointer;font-family:var(--f);transition:.15s}
+.bs:active{background:var(--orl)}
+.chip{background:var(--orl);color:var(--or);border:1.5px solid transparent;border-radius:20px;padding:7px 15px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;font-family:var(--f)}
+.chip.on{background:var(--or);color:#fff}
+.tag{background:var(--rdl);color:var(--rd);border-radius:6px;padding:2px 7px;font-size:10px;font-weight:800}
+.tgg{background:var(--gnl);color:var(--gn);border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700}
+.sec{background:var(--wh);padding:16px}
+.sec-t{font-size:17px;font-weight:800;color:var(--tx);margin-bottom:12px}
+.sbar{display:flex;align-items:center;background:var(--bg);border-radius:13px;padding:0 13px;gap:9px;height:44px;border:1.5px solid transparent;transition:.2s}
+.sbar:focus-within{border-color:var(--or);background:var(--wh)}
+.sbar input{flex:1;border:none;background:none;font-size:14px;color:var(--tx);font-family:var(--f);outline:none}
+.sbar input::placeholder{color:var(--mu)}
+.toast{position:absolute;bottom:104px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(17,17,17,.92);color:#fff;border-radius:24px;padding:10px 20px;font-size:13px;font-weight:700;z-index:600;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;backdrop-filter:blur(10px)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:100;opacity:0;pointer-events:none;transition:.3s}
+.ov.on{opacity:1;pointer-events:all}
+.sh{position:absolute;bottom:0;left:0;right:0;background:var(--wh);border-radius:26px 26px 0 0;z-index:101;transform:translateY(100%);transition:transform .34s cubic-bezier(.4,0,.2,1);padding:0 18px 36px}
+.sh.on{transform:none}
+.sh-hd{width:44px;height:5px;background:var(--br);border-radius:3px;margin:14px auto 18px}
+.bdg{position:absolute;top:-5px;right:-5px;background:var(--rd);color:#fff;border-radius:10px;font-size:9px;font-weight:800;padding:1px 5px;min-width:16px;text-align:center;border:2px solid var(--wh)}
+.rb{background:var(--gn);color:#fff;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800}
+.qb{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--br);background:var(--wh);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;font-family:var(--f)}
+.qb:active{background:var(--orl)}
+.sd{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.sd.done{background:var(--or);color:#fff}
+.sd.cur{background:var(--orl);color:var(--or);border:2.5px solid var(--or)}
+.sd.todo{background:var(--bg);color:var(--mu)}
+.sl{flex:1;height:2px;background:var(--br)}
+.sl.done{background:var(--or)}
+.rr{width:21px;height:21px;border-radius:50%;border:2px solid var(--br);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.rr.on{border-color:var(--or)}
+.rr-d{width:10px;height:10px;border-radius:50%;background:var(--or);display:none}
+.rr.on .rr-d{display:block}
+.wb{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 10px rgba(0,0,0,.13);transition:transform .15s}
+.wb:active{transform:scale(.82)}
+.card{background:var(--wh);border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .15s}
+.card:active{transform:scale(.97)}
+.pf{background:var(--wh);border:1.5px solid var(--br);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--tx);transition:.15s;font-family:var(--f)}
+.pf.on{background:var(--or);color:#fff;border-color:var(--or)}
+.modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end}
+.modal-bg.on{display:flex}
+.modal{background:var(--wh);border-radius:26px 26px 0 0;width:100%;padding:0 20px 36px;overflow-y:auto;max-height:92%}
+.mhd{width:44px;height:5px;background:var(--br);border-radius:3px;margin:14px auto 18px}
+.fi{width:100%;height:48px;border:1.5px solid var(--br);border-radius:12px;padding:0 14px;font-size:14px;font-family:var(--f);outline:none;color:var(--tx);background:var(--wh);margin-bottom:12px;transition:border-color .2s;display:block}
+.fi:focus{border-color:var(--or)}
+.fl{font-size:11px;font-weight:800;color:var(--mu);letter-spacing:.5px;margin-bottom:5px;display:block;text-transform:uppercase}
+@keyframes popin{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.popin{animation:popin .5s cubic-bezier(.34,1.56,.64,1) both}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="phone" id="phone">
+  <div class="island"><div class="island-c"></div><div class="island-p"></div></div>
+  <div id="toast" class="toast"></div>
+  <div id="ov" class="ov" onclick="closeSheet()"></div>
+
+  <!-- FILTER SHEET -->
+  <div id="sheet" class="sh">
+    <div class="sh-hd"></div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:16px">Sort &amp; Filter</div>
+    <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.8px;margin-bottom:10px">SORT BY</div>
+    <div id="sortC" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px">
+      <button class="chip on" onclick="pickSort(this)">Relevance</button>
+      <button class="chip" onclick="pickSort(this)">Price: Low→High</button>
+      <button class="chip" onclick="pickSort(this)">Price: High→Low</button>
+      <button class="chip" onclick="pickSort(this)">Top Rated</button>
+      <button class="chip" onclick="pickSort(this)">Newest</button>
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.8px;margin-bottom:10px">PRICE RANGE (₹)</div>
+    <div class="row" style="gap:10px;margin-bottom:18px">
+      <input class="fi" style="margin:0;flex:1" placeholder="Min ₹">
+      <span style="color:var(--mu);font-weight:700;padding:0 4px">—</span>
+      <input class="fi" style="margin:0;flex:1" placeholder="Max ₹">
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.8px;margin-bottom:10px">MIN RATING</div>
+    <div id="ratingC" style="display:flex;gap:8px;margin-bottom:22px">
+      <button class="chip" onclick="pickRating(this)">4★+</button>
+      <button class="chip on" onclick="pickRating(this)">3★+</button>
+      <button class="chip" onclick="pickRating(this)">Any</button>
+    </div>
+    <button class="bp" style="width:100%" onclick="closeSheet()">Apply Filters</button>
+  </div>
+
+  <!-- ADD ADDRESS MODAL -->
+  <div class="modal-bg" id="addAddrM">
+    <div class="modal">
+      <div class="mhd"></div>
+      <div style="font-size:17px;font-weight:800;margin-bottom:18px;color:var(--tx)">Add New Address</div>
+      <label class="fl">Full Name</label><input class="fi" id="aN" placeholder="e.g. Saksham Sharma">
+      <label class="fl">Phone</label><input class="fi" id="aPh" placeholder="+91 XXXXX XXXXX">
+      <label class="fl">Street / House No.</label><input class="fi" id="aL" placeholder="e.g. 47, Neugal Nagar">
+      <label class="fl">City</label><input class="fi" id="aC" placeholder="e.g. Palampur">
+      <label class="fl">State &amp; PIN</label><input class="fi" id="aSt" placeholder="e.g. HP — 176061">
+      <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.5px;margin-bottom:8px">ADDRESS TYPE</div>
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        <button class="chip on" id="tH" onclick="setType('H')">🏠 Home</button>
+        <button class="chip" id="tW" onclick="setType('W')">💼 Work</button>
+        <button class="chip" id="tO" onclick="setType('O')">📍 Other</button>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="bs" style="flex:1" onclick="closeAddAddr()">Cancel</button>
+        <button class="bp" style="flex:1" onclick="saveAddr()">Save Address</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT ADDRESS MODAL -->
+  <div class="modal-bg" id="editAddrM">
+    <div class="modal">
+      <div class="mhd"></div>
+      <div style="font-size:17px;font-weight:800;margin-bottom:18px;color:var(--tx)">Edit Address</div>
+      <label class="fl">Full Name</label><input class="fi" id="eN">
+      <label class="fl">Phone</label><input class="fi" id="ePh">
+      <label class="fl">Street / House No.</label><input class="fi" id="eL">
+      <label class="fl">City</label><input class="fi" id="eC">
+      <label class="fl">State &amp; PIN</label><input class="fi" id="eSt">
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="bs" style="flex:1" onclick="closeEditAddr()">Cancel</button>
+        <button class="bp" style="flex:1" onclick="saveEditAddr()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REMOVE CONFIRM MODAL -->
+  <div class="modal-bg" id="removeM">
+    <div class="modal" style="padding-bottom:28px">
+      <div class="mhd"></div>
+      <div style="text-align:center;padding:0 10px 20px">
+        <div style="font-size:44px;margin-bottom:12px">🗑️</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;color:var(--tx)">Remove Item?</div>
+        <div style="font-size:13px;color:var(--mu)" id="removeMsg">Remove this item from cart?</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="bs" style="flex:1" onclick="closeRemove()">Keep It</button>
+        <button class="bp" style="flex:1;background:var(--rd);box-shadow:0 4px 14px rgba(229,57,53,.3)" onclick="doRemove()">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ HOME ════ -->
+  <div class="scr active" id="s-home">
+    <div class="st" style="background:var(--wh)"></div>
+    <div style="background:var(--wh);padding:0 16px 12px;border-bottom:1px solid var(--br)">
+      <div class="row" style="gap:10px;margin-bottom:11px">
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.5px">DELIVERING TO</div>
+          <div style="font-size:14px;font-weight:800;color:var(--tx);cursor:pointer" onclick="showToast('Change location coming soon!')">📍 Palampur, HP 176061 <span style="color:var(--or);font-size:11px">▾</span></div>
+        </div>
+        <div class="ib" onclick="go('s-search')">🔍</div>
+        <div class="ib" style="position:relative" onclick="go('s-cart')">🛒<span class="bdg" id="hBdg">3</span></div>
+      </div>
+      <div class="sbar" onclick="go('s-search')" style="cursor:pointer">
+        <span style="font-size:16px;color:var(--mu)">🔍</span>
+        <input placeholder="Search phones, laptops, earbuds..." readonly style="cursor:pointer">
+        <span style="font-size:14px;color:var(--or)">🎤</span>
+      </div>
+    </div>
+    <div class="sc">
+      <!-- Banner -->
+      <div style="background:var(--wh);padding:14px 16px 10px">
+        <div style="border-radius:18px;overflow:hidden;height:168px;position:relative;cursor:pointer" onclick="go('s-listing')">
+          <div id="ban0" style="position:absolute;inset:0;display:flex;align-items:center;padding:22px;background:linear-gradient(130deg,#FF5C00,#FF9040);transition:all .5s">
+            <div style="flex:1"><div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:.8px;margin-bottom:4px">MEGA SALE · ENDS TONIGHT</div><div style="font-size:22px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:12px">Up to 65% Off<br>Smartphones</div><div style="border:1.5px solid rgba(255,255,255,.6);background:rgba(0,0,0,.2);color:#fff;border-radius:20px;display:inline-block;padding:7px 16px;font-size:12px;font-weight:800">Shop Now →</div></div>
+            <div style="font-size:84px;opacity:.22;flex-shrink:0">📱</div>
+          </div>
+          <div id="ban1" style="position:absolute;inset:0;display:flex;align-items:center;padding:22px;background:linear-gradient(130deg,#0F2B5B,#1A56DB);transform:translateX(100%);opacity:0;transition:all .5s">
+            <div style="flex:1"><div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.8px;margin-bottom:4px">NEW LAUNCH 2026</div><div style="font-size:22px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:12px">MacBook Air M4<br>From ₹99,900</div><div style="background:var(--or);color:#fff;border-radius:20px;display:inline-block;padding:7px 16px;font-size:12px;font-weight:800">Explore →</div></div>
+            <div style="font-size:84px;opacity:.22;flex-shrink:0">💻</div>
+          </div>
+          <div id="ban2" style="position:absolute;inset:0;display:flex;align-items:center;padding:22px;background:linear-gradient(130deg,#1A1A2E,#7C3AED);transform:translateX(100%);opacity:0;transition:all .5s">
+            <div style="flex:1"><div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.8px;margin-bottom:4px">JUST DROPPED</div><div style="font-size:22px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:12px">Sony WH-1000XM6<br>₹26,990</div><div style="background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;border-radius:20px;display:inline-block;padding:7px 16px;font-size:12px;font-weight:800">View →</div></div>
+            <div style="font-size:84px;opacity:.22;flex-shrink:0">🎧</div>
+          </div>
+        </div>
+        <div class="row" style="justify-content:center;gap:6px;margin-top:10px" id="banDots">
+          <div style="width:20px;height:5px;border-radius:3px;background:var(--or);transition:.3s"></div>
+          <div style="width:5px;height:5px;border-radius:3px;background:var(--br);transition:.3s"></div>
+          <div style="width:5px;height:5px;border-radius:3px;background:var(--br);transition:.3s"></div>
+        </div>
+      </div>
+      <div class="dv"></div>
+      <!-- Categories -->
+      <div class="sec">
+        <div class="sec-t">Shop by Category</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#FFF1EB;display:flex;align-items:center;justify-content:center;font-size:26px">📱</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Mobiles</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;font-size:26px">💻</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Laptops</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#F0FFF4;display:flex;align-items:center;justify-content:center;font-size:26px">🎧</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Audio</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#FFF8E6;display:flex;align-items:center;justify-content:center;font-size:26px">⌚</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Wearables</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#F5F0FF;display:flex;align-items:center;justify-content:center;font-size:26px">📷</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Cameras</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#FFF0F5;display:flex;align-items:center;justify-content:center;font-size:26px">🎮</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Gaming</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#E6FAFF;display:flex;align-items:center;justify-content:center;font-size:26px">🖥️</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Monitors</div></div>
+          <div onclick="go('s-listing')" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer"><div style="width:58px;height:58px;border-radius:16px;background:#F0FFF8;display:flex;align-items:center;justify-content:center;font-size:26px">🔌</div><div style="font-size:10px;font-weight:700;color:var(--tx)">Accessories</div></div>
+        </div>
+      </div>
+      <div class="dv"></div>
+      <div style="background:var(--wh);padding:14px 16px">
+        <div style="background:linear-gradient(120deg,#111,#2a2a2a);border-radius:18px;padding:18px 20px;display:flex;align-items:center;cursor:pointer" onclick="openDetail(0)">
+          <div style="flex:1"><div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:.8px;margin-bottom:4px">APPLE EXCLUSIVE</div><div style="font-size:18px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px">iPhone 16 Pro Max<br><span style="color:var(--or)">₹1,34,900</span></div><div style="background:var(--or);display:inline-block;padding:6px 16px;border-radius:20px;color:#fff;font-size:12px;font-weight:800">Order Now →</div></div>
+          <div style="font-size:70px;opacity:.9;flex-shrink:0">📱</div>
+        </div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="row" style="margin-bottom:14px"><div class="sec-t" style="margin:0;flex:1">Trending Now 🔥</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-listing')">See all →</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="trendGrid"></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="row" style="margin-bottom:14px"><div class="sec-t" style="margin:0;flex:1">Best Laptops 💻</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-listing')">See all →</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="laptopGrid"></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="row" style="margin-bottom:14px"><div class="sec-t" style="margin:0;flex:1">Top Audio 🎧</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-listing')">See all →</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="audioGrid"></div>
+      </div>
+      <div class="dv"></div>
+      <div style="background:var(--wh);padding:14px 16px 20px">
+        <div style="background:linear-gradient(120deg,var(--or),#FF8040);border-radius:18px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="showToast('Welcome to ShopWave Prime ⭐')">
+          <span style="font-size:40px">⭐</span>
+          <div style="flex:1"><div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.8);letter-spacing:.7px">SHOPWAVE PRIME</div><div style="font-size:15px;font-weight:800;color:#fff;margin-top:3px">Free 2-day delivery +<br>Exclusive member deals</div></div>
+          <div style="background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.5);padding:8px 14px;border-radius:20px;color:#fff;font-size:12px;font-weight:800;flex-shrink:0">Try Free</div>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+    <div id="hBn"></div>
+  </div>
+
+  <!-- ════ SEARCH ════ -->
+  <div class="scr" id="s-search">
+    <div class="st" style="background:var(--wh)"></div>
+    <div style="background:var(--wh);padding:0 16px 12px;border-bottom:1px solid var(--br)">
+      <div class="row" style="gap:10px">
+        <div class="sbar" style="flex:1">
+          <span style="font-size:16px;color:var(--or)">🔍</span>
+          <input id="sInp" placeholder="Search ShopWave..." oninput="onSearch(this.value)">
+          <span id="sClr" style="font-size:13px;cursor:pointer;color:var(--mu);display:none" onclick="clearSearch()">✕</span>
+        </div>
+        <span style="font-size:14px;font-weight:800;color:var(--or);cursor:pointer;white-space:nowrap" onclick="go('s-home')">Cancel</span>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sec">
+        <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.8px;margin-bottom:12px">RECENT SEARCHES</div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:12px" onclick="doSearch('iPhone 16 Pro Max')"><span style="font-size:14px;color:var(--mu)">🕐</span><span style="font-size:14px;font-weight:500;color:var(--tx)">iPhone 16 Pro Max</span><span style="margin-left:auto;color:var(--mu)">↗</span></div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:12px" onclick="doSearch('MacBook Air M4')"><span style="font-size:14px;color:var(--mu)">🕐</span><span style="font-size:14px;font-weight:500;color:var(--tx)">MacBook Air M4</span><span style="margin-left:auto;color:var(--mu)">↗</span></div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:12px" onclick="doSearch('Sony WH-1000XM6')"><span style="font-size:14px;color:var(--mu)">🕐</span><span style="font-size:14px;font-weight:500;color:var(--tx)">Sony WH-1000XM6</span><span style="margin-left:auto;color:var(--mu)">↗</span></div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:12px" onclick="doSearch('Samsung S25 Ultra')"><span style="font-size:14px;color:var(--mu)">🕐</span><span style="font-size:14px;font-weight:500;color:var(--tx)">Samsung Galaxy S25 Ultra</span><span style="margin-left:auto;color:var(--mu)">↗</span></div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:12px" onclick="doSearch('PS5 Slim')"><span style="font-size:14px;color:var(--mu)">🕐</span><span style="font-size:14px;font-weight:500;color:var(--tx)">PS5 Slim Digital Edition</span><span style="margin-left:auto;color:var(--mu)">↗</span></div>
+        <div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.8px;margin:16px 0 12px">TRENDING NOW</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button class="chip" onclick="doSearch('Wireless Earbuds')">Wireless Earbuds 🎧</button>
+          <button class="chip" onclick="doSearch('Gaming Laptop')">Gaming Laptop 🎮</button>
+          <button class="chip" onclick="doSearch('Smart Watch')">Smart Watch ⌚</button>
+          <button class="chip" onclick="doSearch('4K Monitor')">4K Monitor 🖥️</button>
+          <button class="chip" onclick="doSearch('Camera')">Mirrorless Camera 📷</button>
+          <button class="chip" onclick="doSearch('iPad Pro')">iPad Pro 📱</button>
+          <button class="chip" onclick="doSearch('RTX Laptop')">RTX 4070 Laptop</button>
+          <button class="chip" onclick="doSearch('AirPods')">AirPods Pro 🎵</button>
+        </div>
+      </div>
+    </div>
+    <div id="sBn"></div>
+  </div>
+
+  <!-- ════ LISTING ════ -->
+  <div class="scr" id="s-listing">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb">
+      <button class="ib" onclick="goBack()">←</button>
+      <div class="tb-t" id="listTitle">Electronics</div>
+      <div class="ib" style="position:relative" onclick="go('s-cart')">🛒<span class="bdg" id="lBdg">3</span></div>
+    </div>
+    <div style="background:var(--wh);padding:10px 16px;border-bottom:1px solid var(--br)">
+      <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px">
+        <button class="chip on" onclick="pickCat(this,'All')">All</button>
+        <button class="chip" onclick="pickCat(this,'Phones')">📱 Phones</button>
+        <button class="chip" onclick="pickCat(this,'Laptops')">💻 Laptops</button>
+        <button class="chip" onclick="pickCat(this,'Audio')">🎧 Audio</button>
+        <button class="chip" onclick="pickCat(this,'Wearables')">⌚ Wearables</button>
+        <button class="chip" onclick="pickCat(this,'Cameras')">📷 Cameras</button>
+        <button class="chip" onclick="pickCat(this,'Gaming')">🎮 Gaming</button>
+      </div>
+    </div>
+    <div style="background:var(--wh);padding:9px 16px;border-bottom:1px solid var(--br)">
+      <div class="row" style="gap:8px">
+        <span style="font-size:12px;color:var(--mu);font-weight:600" id="rCnt">16 results</span>
+        <div style="display:flex;gap:7px;margin-left:auto">
+          <button class="pf" onclick="openSheet()">⚙ Filters</button>
+          <button class="pf on" onclick="openSheet()">⇅ Sort</button>
+        </div>
+        <button class="ib" style="width:34px;height:34px;font-size:14px;background:none;border:none" onclick="showToast('View toggled')">⊞</button>
+      </div>
+    </div>
+    <div class="sc">
+      <div style="padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="listGrid"></div>
+    </div>
+    <div id="lBn"></div>
+  </div>
+
+  <!-- ════ PRODUCT DETAIL ════ -->
+  <div class="scr" id="s-detail">
+    <div style="position:absolute;top:0;left:0;right:0;z-index:20">
+      <div class="st" style="background:transparent;pointer-events:none"></div>
+      <div class="row" style="padding:0 16px 8px;justify-content:space-between">
+        <button class="ib" style="background:rgba(255,255,255,.9)" onclick="goBack()">←</button>
+        <div class="row" style="gap:8px">
+          <button class="wb" id="wBtn" onclick="toggleWish()">🤍</button>
+          <button class="ib" style="background:rgba(255,255,255,.9);position:relative" onclick="go('s-cart')">🛒<span class="bdg" id="dBdg">3</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="sc">
+      <div style="height:300px;background:var(--wh);overflow:hidden;position:relative" id="gWrap" ontouchstart="gts(event)" ontouchend="gte(event)">
+        <div id="gal" style="display:flex;height:100%;width:300%;transition:transform .34s cubic-bezier(.4,0,.2,1)">
+          <div id="gImg" style="width:33.33%;display:flex;align-items:center;justify-content:center;font-size:120px;background:#fff">📱</div>
+          <div style="width:33.33%;display:flex;align-items:center;justify-content:center;font-size:120px;background:#fafafa">📦</div>
+          <div style="width:33.33%;display:flex;align-items:center;justify-content:center;font-size:120px;background:#f5f5f5">🎁</div>
+        </div>
+        <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px" id="gDots">
+          <div style="width:20px;height:4px;border-radius:2px;background:var(--or);transition:.3s"></div>
+          <div style="width:4px;height:4px;border-radius:2px;background:rgba(0,0,0,.2);transition:.3s"></div>
+          <div style="width:4px;height:4px;border-radius:2px;background:rgba(0,0,0,.2);transition:.3s"></div>
+        </div>
+        <div style="position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px">
+          <div id="gT0" onclick="galTo(0)" style="width:36px;height:36px;border-radius:10px;border:2px solid var(--or);background:var(--orl);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer">📱</div>
+          <div onclick="galTo(1)" style="width:36px;height:36px;border-radius:10px;border:1.5px solid var(--br);background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer">📦</div>
+          <div onclick="galTo(2)" style="width:36px;height:36px;border-radius:10px;border:1.5px solid var(--br);background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer">🎁</div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="row" style="gap:7px;margin-bottom:10px"><span class="tag" id="dTag">27% OFF</span><span class="tgg">✓ In Stock</span><span style="font-size:11px;color:var(--mu);margin-left:6px">4,218 sold</span></div>
+        <div id="dTitle" style="font-size:18px;font-weight:800;line-height:1.4;margin-bottom:12px;color:var(--tx)">Apple iPhone 16 Pro Max 256GB</div>
+        <div class="row" style="gap:14px;margin-bottom:12px;flex-wrap:wrap">
+          <div id="dPrice" style="font-size:27px;font-weight:800;color:var(--tx)">₹1,34,900</div>
+          <div><div id="dOld" style="font-size:12px;color:var(--mu);text-decoration:line-through">M.R.P ₹1,84,900</div><div id="dSave" style="font-size:12px;font-weight:800;color:var(--gn)">You save ₹50,000</div></div>
+        </div>
+        <div class="row" style="gap:8px;margin-bottom:16px"><div class="rb" id="dRat">4.8 ★</div><span id="dRevC" style="font-size:12px;color:var(--mu);font-weight:600">3,142 ratings</span></div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;font-weight:800;color:var(--mu);margin-bottom:8px">COLOR</div>
+          <div class="row" style="gap:8px">
+            <div style="width:32px;height:32px;border-radius:50%;background:#C8A882;border:3px solid var(--or);outline:2px solid rgba(255,92,0,.3);outline-offset:1px;cursor:pointer" onclick="showToast('Desert Titanium')"></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:#1c1c1e;border:2px solid var(--br);cursor:pointer" onclick="showToast('Black Titanium')"></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:#e0e0e0;border:2px solid var(--br);cursor:pointer" onclick="showToast('White Titanium')"></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:#4A9EDA;border:2px solid var(--br);cursor:pointer" onclick="showToast('Blue Titanium')"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--mu);margin-bottom:8px">STORAGE</div>
+          <div class="row" style="gap:8px;flex-wrap:wrap" id="stOpts">
+            <button style="padding:9px 14px;border-radius:12px;border:2.5px solid var(--or);background:var(--orl);cursor:pointer;font-family:var(--f)" onclick="pickStor(this)"><div style="font-size:13px;font-weight:800;color:var(--or)">256 GB</div><div style="font-size:10px;color:var(--mu)">₹1,34,900</div></button>
+            <button style="padding:9px 14px;border-radius:12px;border:1.5px solid var(--br);background:var(--wh);cursor:pointer;font-family:var(--f)" onclick="pickStor(this)"><div style="font-size:13px;font-weight:700;color:var(--tx)">512 GB</div><div style="font-size:10px;color:var(--mu)">₹1,54,900</div></button>
+            <button style="padding:9px 14px;border-radius:12px;border:1.5px solid var(--br);background:var(--wh);cursor:pointer;font-family:var(--f)" onclick="pickStor(this)"><div style="font-size:13px;font-weight:700;color:var(--tx)">1 TB</div><div style="font-size:10px;color:var(--mu)">₹1,84,900</div></button>
+          </div>
+        </div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="row" style="gap:12px;margin-bottom:12px"><span style="font-size:22px">🚚</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--tx)">FREE Delivery <span style="color:var(--gn)">Tomorrow, May 6</span></div><div style="font-size:11px;color:var(--mu)">Order within <span style="font-weight:800;color:var(--or)">4 hrs 22 mins</span></div></div></div>
+        <div class="row" style="gap:12px;margin-bottom:12px"><span style="font-size:22px">🔒</span><div style="font-size:12px;color:var(--mu)">Secure payment · Verified seller · Genuine product</div></div>
+        <div class="row" style="gap:12px"><span style="font-size:22px">↩️</span><div style="font-size:12px;color:var(--mu)">7-day replacement · 1-year warranty</div></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="sec-t">Key Specifications</div>
+        <div id="dSpecs"></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="row" style="margin-bottom:14px"><div class="sec-t" style="margin:0;flex:1">Reviews</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="showToast('Loading reviews...')">See all →</span></div>
+        <div style="background:var(--bg);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:18px">
+          <div style="text-align:center"><div id="dRatBig" style="font-size:36px;font-weight:800;color:var(--tx)">4.8</div><div style="color:var(--st);font-size:14px;letter-spacing:1px">★★★★★</div><div id="dTotRat" style="font-size:10px;color:var(--mu);margin-top:2px">3,142 ratings</div></div>
+          <div style="flex:1">
+            <div class="row" style="gap:6px;margin-bottom:4px"><span style="font-size:10px;width:16px;font-weight:800;color:var(--tx)">5★</span><div style="flex:1;height:5px;background:var(--br);border-radius:3px;overflow:hidden"><div style="height:100%;width:78%;background:var(--st);border-radius:3px"></div></div><span style="font-size:10px;color:var(--mu)">78%</span></div>
+            <div class="row" style="gap:6px;margin-bottom:4px"><span style="font-size:10px;width:16px;font-weight:800;color:var(--tx)">4★</span><div style="flex:1;height:5px;background:var(--br);border-radius:3px;overflow:hidden"><div style="height:100%;width:14%;background:var(--st);border-radius:3px"></div></div><span style="font-size:10px;color:var(--mu)">14%</span></div>
+            <div class="row" style="gap:6px;margin-bottom:4px"><span style="font-size:10px;width:16px;font-weight:800;color:var(--tx)">3★</span><div style="flex:1;height:5px;background:var(--br);border-radius:3px;overflow:hidden"><div style="height:100%;width:5%;background:var(--st);border-radius:3px"></div></div><span style="font-size:10px;color:var(--mu)">5%</span></div>
+            <div class="row" style="gap:6px"><span style="font-size:10px;width:16px;font-weight:800;color:var(--tx)">2★</span><div style="flex:1;height:5px;background:var(--br);border-radius:3px;overflow:hidden"><div style="height:100%;width:3%;background:var(--st);border-radius:3px"></div></div><span style="font-size:10px;color:var(--mu)">3%</span></div>
+          </div>
+        </div>
+        <div style="padding:13px 0;border-bottom:1px solid var(--br)"><div class="row" style="gap:10px;margin-bottom:6px"><div style="width:32px;height:32px;border-radius:50%;background:var(--orl);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--or)">P</div><div><div style="font-size:13px;font-weight:700;color:var(--tx)">Priya Sharma <span style="font-size:10px;color:var(--gn)">✓ Verified</span></div><div style="color:var(--st);font-size:11px">★★★★★</div></div></div><div style="font-size:12px;color:var(--mu);line-height:1.6">Camera is absolutely insane. Best phone I have ever owned — night mode and ProRes are world class.</div></div>
+        <div style="padding:13px 0;border-bottom:1px solid var(--br)"><div class="row" style="gap:10px;margin-bottom:6px"><div style="width:32px;height:32px;border-radius:50%;background:#EBF2FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#1A56DB">S</div><div><div style="font-size:13px;font-weight:700;color:var(--tx)">Saksham Sharma <span style="font-size:10px;color:var(--gn)">✓ Verified</span></div><div style="color:var(--st);font-size:11px">★★★★★</div></div></div><div style="font-size:12px;color:var(--mu);line-height:1.6">Blazing performance and the titanium build feels premium. Battery life is a huge jump.</div></div>
+        <div style="padding:13px 0"><div class="row" style="gap:10px;margin-bottom:6px"><div style="width:32px;height:32px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--gn)">A</div><div><div style="font-size:13px;font-weight:700;color:var(--tx)">Ananya Desai <span style="font-size:10px;color:var(--gn)">✓ Verified</span></div><div style="color:var(--st);font-size:11px">★★★★★</div></div></div><div style="font-size:12px;color:var(--mu);line-height:1.6">Worth every rupee. Display is jaw-dropping and the Action Button is super handy.</div></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sec">
+        <div class="row" style="margin-bottom:14px"><div class="sec-t" style="margin:0;flex:1">Similar Products</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-listing')">See all →</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="simGrid"></div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;background:var(--wh);border-top:1px solid var(--br);padding:12px 16px 24px;display:flex;gap:10px">
+      <button class="bs" style="flex:1" onclick="addToCart()">🛒 Add to Cart</button>
+      <button class="bp" style="flex:1.5" onclick="go('s-checkout1')">⚡ Buy Now</button>
+    </div>
+  </div>
+
+  <!-- ════ CART ════ -->
+  <div class="scr" id="s-cart">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb">
+      <button class="ib" onclick="goBack()">←</button>
+      <div class="tb-t" id="cartTitle">My Cart (3)</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:800;color:var(--rd);cursor:pointer;font-family:var(--f)" onclick="showToast('All items cleared')">Clear</button>
+    </div>
+    <div class="sc">
+      <div style="background:var(--gnl);padding:10px 16px;display:flex;align-items:center;gap:8px"><span>🚚</span><span style="font-size:12px;font-weight:800;color:var(--gn)">You qualify for FREE Delivery!</span></div>
+      <div id="cartItems"></div>
+      <div class="sec" id="priceBreak">
+        <div class="sec-t">Price Details</div>
+        <div class="row" style="padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Price (<span id="piC">3</span> items)</span><span id="piMrp" style="font-size:13px;font-weight:700;margin-left:auto;color:var(--tx)">₹2,81,790</span></div>
+        <div class="row" style="padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Discount</span><span id="piDisc" style="font-size:13px;font-weight:800;margin-left:auto;color:var(--gn)">−₹61,000</span></div>
+        <div class="row" style="padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Delivery</span><span style="font-size:13px;font-weight:800;margin-left:auto;color:var(--gn)">FREE</span></div>
+        <div class="row" style="padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Platform Fee</span><span style="font-size:13px;font-weight:700;margin-left:auto;color:var(--tx)">₹20</span></div>
+        <div class="row" style="padding:14px 0 4px"><span style="font-size:16px;font-weight:800;color:var(--tx)">Total</span><span id="piTotal" style="font-size:20px;font-weight:800;margin-left:auto;color:var(--tx)">₹2,20,810</span></div>
+        <div style="background:var(--gnl);border-radius:10px;padding:10px 13px;margin-top:6px"><span id="piSave" style="font-size:12px;color:var(--gn);font-weight:800">🎉 Saving ₹61,000 on this order!</span></div>
+      </div>
+      <div style="height:80px"></div>
+    </div>
+    <div style="background:var(--wh);border-top:1px solid var(--br);padding:12px 16px 22px">
+      <button class="bp" style="width:100%;font-size:16px" id="ctaBtn">Proceed to Checkout →</button>
+    </div>
+  </div>
+
+  <!-- ════ CHECKOUT 1: ADDRESS ════ -->
+  <div class="scr" id="s-checkout1">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb"><button class="ib" onclick="go('s-cart')">←</button><div class="tb-t">Checkout</div></div>
+    <div style="background:var(--wh);padding:14px 20px;border-bottom:1px solid var(--br)">
+      <div class="row" style="gap:0"><div class="sd done">✓</div><div class="sl done"></div><div class="sd cur">2</div><div class="sl"></div><div class="sd todo">3</div></div>
+      <div class="row" style="margin-top:5px;font-size:9px;font-weight:800;color:var(--mu);justify-content:space-between;padding:0 2px"><span>ADDRESS</span><span>PAYMENT</span><span>CONFIRM</span></div>
+    </div>
+    <div class="sc">
+      <div class="sec">
+        <div class="sec-t">Select Delivery Address</div>
+        <div id="savedAddrs"></div>
+        <button style="width:100%;height:48px;border-radius:14px;border:2px dashed var(--or);background:var(--orl);color:var(--or);font-size:14px;font-weight:800;cursor:pointer;font-family:var(--f)" onclick="openAddAddr()">+ Add New Address</button>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <div style="background:var(--wh);border-top:1px solid var(--br);padding:12px 16px 24px">
+      <button class="bp" style="width:100%" onclick="go('s-checkout2')">Deliver Here →</button>
+    </div>
+  </div>
+
+  <!-- ════ CHECKOUT 2: PAYMENT ════ -->
+  <div class="scr" id="s-checkout2">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb"><button class="ib" onclick="go('s-checkout1')">←</button><div class="tb-t">Payment</div></div>
+    <div style="background:var(--wh);padding:14px 20px;border-bottom:1px solid var(--br)">
+      <div class="row" style="gap:0"><div class="sd done">✓</div><div class="sl done"></div><div class="sd done">✓</div><div class="sl done"></div><div class="sd cur">3</div></div>
+    </div>
+    <div class="sc">
+      <div class="sec">
+        <div class="sec-t">Choose Payment Method</div>
+        <div id="payM">
+          <div class="row" style="padding:14px;border-radius:16px;border:2.5px solid var(--or);background:var(--orl);margin-bottom:10px;cursor:pointer;gap:13px" onclick="pickPay(this)"><span style="font-size:26px">📲</span><div style="flex:1"><div style="font-size:14px;font-weight:800;color:var(--tx)">UPI Payment</div><div style="font-size:11px;color:var(--mu)">PhonePe, GPay, Paytm, BHIM</div></div><div class="rr on"><div class="rr-d"></div></div></div>
+          <div class="row" style="padding:14px;border-radius:16px;border:1.5px solid var(--br);background:var(--wh);margin-bottom:10px;cursor:pointer;gap:13px" onclick="pickPay(this)"><span style="font-size:26px">💳</span><div style="flex:1"><div style="font-size:14px;font-weight:800;color:var(--tx)">Credit / Debit Card</div><div style="font-size:11px;color:var(--mu)">Visa, Mastercard, RuPay, Amex</div></div><div class="rr"><div class="rr-d"></div></div></div>
+          <div class="row" style="padding:14px;border-radius:16px;border:1.5px solid var(--br);background:var(--wh);margin-bottom:10px;cursor:pointer;gap:13px" onclick="pickPay(this)"><span style="font-size:26px">🏦</span><div style="flex:1"><div style="font-size:14px;font-weight:800;color:var(--tx)">EMI — No Cost</div><div style="font-size:11px;color:var(--mu)">6, 9, 12, 24 month options</div></div><div class="rr"><div class="rr-d"></div></div></div>
+          <div class="row" style="padding:14px;border-radius:16px;border:1.5px solid var(--br);background:var(--wh);margin-bottom:10px;cursor:pointer;gap:13px" onclick="pickPay(this)"><span style="font-size:26px">💵</span><div style="flex:1"><div style="font-size:14px;font-weight:800;color:var(--tx)">Cash on Delivery</div><div style="font-size:11px;color:var(--mu)">Pay on arrival</div></div><div class="rr"><div class="rr-d"></div></div></div>
+        </div>
+        <div style="background:var(--gnl);border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:9px"><span style="font-size:17px">🛡️</span><span style="font-size:11px;font-weight:700;color:var(--gn)">100% secure &amp; encrypted payments</span></div>
+      </div>
+      <div style="height:120px"></div>
+    </div>
+    <div style="background:var(--wh);border-top:1px solid var(--br);padding:12px 16px 24px">
+      <div class="row" style="margin-bottom:12px"><span style="font-size:13px;color:var(--mu)">Amount to Pay</span><span id="payAmt" style="font-size:20px;font-weight:800;margin-left:auto;color:var(--tx)">₹2,20,810</span></div>
+      <button class="bp" style="width:100%" onclick="go('s-checkout3')">Review Order →</button>
+    </div>
+  </div>
+
+  <!-- ════ CHECKOUT 3: REVIEW ════ -->
+  <div class="scr" id="s-checkout3">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb"><button class="ib" onclick="go('s-checkout2')">←</button><div class="tb-t">Review Order</div></div>
+    <div class="sc">
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="row" style="margin-bottom:10px"><div class="sec-t" style="margin:0;flex:1">Delivery Address</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-checkout1')">Change</span></div>
+        <div id="reviewAddr">
+          <div style="font-size:13px;font-weight:800;margin-bottom:4px;color:var(--tx)">Saksham Sharma</div>
+          <div style="font-size:12px;color:var(--mu);line-height:1.7">47, Neugal Nagar, Palampur — 176061<br>📞 +91 98765 43210</div>
+        </div>
+      </div>
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="row" style="margin-bottom:12px"><div class="sec-t" style="margin:0;flex:1">Items</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-cart')">Edit</span></div>
+        <div id="reviewItems"></div>
+      </div>
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="row"><div class="sec-t" style="margin:0;flex:1">Payment</div><span style="font-size:12px;color:var(--or);font-weight:800;cursor:pointer" onclick="go('s-checkout2')">Change</span></div>
+        <div class="row" style="gap:10px;margin-top:10px"><span style="font-size:20px">📲</span><span style="font-size:13px;font-weight:700;color:var(--tx)">UPI (PhonePe)</span><span id="reviewTotal" style="margin-left:auto;font-size:15px;font-weight:800;color:var(--tx)">₹2,20,810</span></div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Price Breakdown</div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Total MRP</span><span id="rv1" style="font-size:13px;font-weight:700;margin-left:auto;color:var(--tx)">₹2,81,790</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Discount</span><span id="rv2" style="font-size:13px;font-weight:800;margin-left:auto;color:var(--gn)">−₹61,000</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Platform Fee</span><span style="font-size:13px;font-weight:700;margin-left:auto;color:var(--tx)">₹20</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--br)"><span style="font-size:13px;color:var(--mu)">Delivery</span><span style="font-size:13px;font-weight:800;margin-left:auto;color:var(--gn)">FREE</span></div>
+        <div class="row" style="padding:14px 0 0"><span style="font-size:16px;font-weight:800;color:var(--tx)">Order Total</span><span id="rv3" style="font-size:20px;font-weight:800;margin-left:auto;color:var(--tx)">₹2,20,810</span></div>
+      </div>
+      <div style="height:110px"></div>
+    </div>
+    <div style="background:var(--wh);border-top:1px solid var(--br);padding:12px 16px 24px">
+      <div style="font-size:10px;color:var(--mu);text-align:center;margin-bottom:10px">By placing this order you agree to our <span style="color:var(--or);cursor:pointer" onclick="showToast('Opening T&C...')">Terms &amp; Conditions</span></div>
+      <button class="bp" style="width:100%;height:52px;font-size:16px" id="placeBtn">🔒 Place Order — ₹2,20,810</button>
+    </div>
+  </div>
+
+  <!-- ════ ORDER CONFIRMED ════ -->
+  <div class="scr" id="s-confirm">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="sc">
+      <div style="padding:36px 22px 0;text-align:center">
+        <div class="popin" style="width:92px;height:92px;border-radius:50%;background:var(--gnl);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:50px">✅</div>
+        <div style="font-size:24px;font-weight:800;margin-bottom:8px;color:var(--tx)">Order Placed! 🎉</div>
+        <div style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:22px">Your order is confirmed and being<br>prepared for dispatch.</div>
+        <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:14px;text-align:left"><div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.7px;margin-bottom:5px">ORDER ID</div><div style="font-size:17px;font-weight:800;color:var(--tx)">#SHW-20260505-9142</div></div>
+        <div style="background:var(--wh);border:1.5px solid var(--br);border-radius:16px;padding:14px;text-align:left;margin-bottom:14px">
+          <div class="row" style="gap:11px;padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:18px">📦</span><div><div style="font-size:10px;color:var(--mu);font-weight:700">ITEMS</div><div style="font-size:12px;font-weight:700;color:var(--tx)">iPhone 16 Pro Max + MacBook M4 + Sony XM6</div></div></div>
+          <div class="row" style="gap:11px;padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:18px">🚚</span><div><div style="font-size:10px;color:var(--mu);font-weight:700">DELIVERY</div><div style="font-size:12px;font-weight:800;color:var(--gn)">Tomorrow, May 6 by 9 PM</div></div></div>
+          <div class="row" style="gap:11px;padding:9px 0;border-bottom:1px solid var(--br)"><span style="font-size:18px">💳</span><div><div style="font-size:10px;color:var(--mu);font-weight:700">PAYMENT</div><div style="font-size:12px;font-weight:700;color:var(--tx)">UPI — ₹2,20,810 ✓ Confirmed</div></div></div>
+          <div class="row" style="gap:11px;padding:9px 0"><span style="font-size:18px">📍</span><div><div style="font-size:10px;color:var(--mu);font-weight:700">DELIVER TO</div><div style="font-size:12px;font-weight:700;color:var(--tx)">Saksham Sharma · Palampur, HP</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 20px 32px;display:flex;flex-direction:column;gap:10px">
+      <button class="bp" style="width:100%" onclick="go('s-orders')">📍 Track My Order</button>
+      <button class="bs" style="width:100%" onclick="go('s-home')">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- ════ ORDER TRACKING ════ -->
+  <div class="scr" id="s-orders">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb"><button class="ib" onclick="goBack()">←</button><div class="tb-t">Track Order</div><button class="ib" onclick="showToast('Order ID copied!')">⋯</button></div>
+    <div class="sc">
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="row" style="margin-bottom:14px">
+          <div><div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.6px">ORDER ID</div><div style="font-size:14px;font-weight:800;color:var(--tx)">#SHW-20260505-9142</div></div>
+          <div style="margin-left:auto;text-align:right"><div style="font-size:10px;font-weight:800;color:var(--mu);letter-spacing:.6px">ARRIVING</div><div style="font-size:14px;font-weight:800;color:var(--gn)">Tomorrow, May 6</div></div>
+        </div>
+        <div style="background:var(--orl);border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:13px"><span style="font-size:30px">🚚</span><div><div style="font-size:15px;font-weight:800;color:var(--or)">Out for Delivery</div><div style="font-size:11px;color:var(--mu)">Partner heading to you · ETA 9 PM</div></div><button class="bp" style="margin-left:auto;height:34px;font-size:11px;padding:0 12px;box-shadow:none;flex-shrink:0" onclick="showToast('Calling delivery partner...')">📞 Call</button></div>
+        <div style="margin-top:12px;background:var(--bg);border-radius:12px;height:110px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--mu);font-weight:600;cursor:pointer" onclick="showToast('Opening live map...')">🗺️ Tap to view live map</div>
+      </div>
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="sec-t">Delivery Timeline</div>
+        <div style="padding:0 4px">
+          <div style="display:flex;gap:13px"><div style="display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0"><div style="width:18px;height:18px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800">✓</div><div style="width:2px;min-height:24px;background:var(--or);margin:3px 0"></div></div><div style="flex:1;padding-bottom:16px"><div style="font-size:13px;font-weight:700;color:var(--tx)">Order Confirmed</div><div style="font-size:11px;color:var(--mu);margin-top:2px">May 5, 2026 · 11:22 AM</div></div></div>
+          <div style="display:flex;gap:13px"><div style="display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0"><div style="width:18px;height:18px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800">✓</div><div style="width:2px;min-height:24px;background:var(--or);margin:3px 0"></div></div><div style="flex:1;padding-bottom:16px"><div style="font-size:13px;font-weight:700;color:var(--tx)">Payment Verified</div><div style="font-size:11px;color:var(--mu);margin-top:2px">May 5, 2026 · 11:23 AM</div></div></div>
+          <div style="display:flex;gap:13px"><div style="display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0"><div style="width:18px;height:18px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800">✓</div><div style="width:2px;min-height:24px;background:var(--or);margin:3px 0"></div></div><div style="flex:1;padding-bottom:16px"><div style="font-size:13px;font-weight:700;color:var(--tx)">Packed &amp; Dispatched</div><div style="font-size:11px;color:var(--mu);margin-top:2px">May 5, 2026 · 2:40 PM · Delhi Hub</div></div></div>
+          <div style="display:flex;gap:13px"><div style="display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0"><div style="width:18px;height:18px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800">✓</div><div style="width:2px;min-height:24px;background:var(--br);margin:3px 0"></div></div><div style="flex:1;padding-bottom:16px"><div style="font-size:13px;font-weight:700;color:var(--or)">Out for Delivery ← Now</div><div style="font-size:11px;color:var(--mu);margin-top:2px">May 6, 2026 · 8:12 AM</div></div></div>
+          <div style="display:flex;gap:13px"><div style="display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0"><div style="width:18px;height:18px;border-radius:50%;background:var(--br);flex-shrink:0"></div></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--mu)">Delivered</div><div style="font-size:11px;color:var(--mu);margin-top:2px">Expected by 9:00 PM</div></div></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Items in this Order</div>
+        <div class="row" style="gap:11px;padding:10px 0;border-bottom:1px solid var(--br)"><div style="width:48px;height:48px;background:#FFF1EB;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📱</div><div style="flex:1;font-size:12px;font-weight:600;color:var(--tx)">Apple iPhone 16 Pro Max 256GB</div><div style="font-size:13px;font-weight:800;color:var(--tx)">₹1,34,900</div></div>
+        <div class="row" style="gap:11px;padding:10px 0;border-bottom:1px solid var(--br)"><div style="width:48px;height:48px;background:#EBF2FF;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">💻</div><div style="flex:1;font-size:12px;font-weight:600;color:var(--tx)">MacBook Air M4 13-inch 512GB</div><div style="font-size:13px;font-weight:800;color:var(--tx)">₹1,19,900</div></div>
+        <div class="row" style="gap:11px;padding:10px 0"><div style="width:48px;height:48px;background:#F0FFF4;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🎧</div><div style="flex:1;font-size:12px;font-weight:600;color:var(--tx)">Sony WH-1000XM6 Headphones</div><div style="font-size:13px;font-weight:800;color:var(--tx)">₹26,990</div></div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- ════ PROFILE ════ -->
+  <div class="scr" id="s-profile">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb"><div class="tb-t">My Account</div><button class="ib" onclick="showToast('Opening settings...')">⚙️</button></div>
+    <div class="sc">
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="row" style="gap:14px">
+          <div style="width:66px;height:66px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(255,92,0,.3)">SS</div>
+          <div style="flex:1"><div style="font-size:19px;font-weight:800;color:var(--tx)">Saksham Sharma</div><div style="font-size:12px;color:var(--mu)">saksham.sharma@gmail.com</div><div style="font-size:11px;color:var(--or);font-weight:800;margin-top:3px">⭐ ShopWave Prime Member</div></div>
+          <button style="border:1.5px solid var(--or);background:none;color:var(--or);border-radius:10px;padding:6px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--f)" onclick="showToast('Edit profile opening...')">Edit</button>
+        </div>
+      </div>
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+          <div style="background:var(--bg);border-radius:14px;padding:13px 8px;cursor:pointer" onclick="go('s-orders')"><div style="font-size:22px;margin-bottom:3px">📦</div><div style="font-size:19px;font-weight:800;color:var(--or)">12</div><div style="font-size:10px;font-weight:700;color:var(--mu)">Orders</div></div>
+          <div style="background:var(--bg);border-radius:14px;padding:13px 8px;cursor:pointer" onclick="go('s-wishlist')"><div style="font-size:22px;margin-bottom:3px">❤️</div><div style="font-size:19px;font-weight:800;color:var(--or)">6</div><div style="font-size:10px;font-weight:700;color:var(--mu)">Wishlist</div></div>
+          <div style="background:var(--bg);border-radius:14px;padding:13px 8px;cursor:pointer" onclick="showToast('Coupons & savings')"><div style="font-size:22px;margin-bottom:3px">💰</div><div style="font-size:19px;font-weight:800;color:var(--or)">₹61K</div><div style="font-size:10px;font-weight:700;color:var(--mu)">Saved</div></div>
+        </div>
+      </div>
+      <div class="sec" style="border-bottom:8px solid var(--bg)">
+        <div class="sec-t">Recent Orders</div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:11px" onclick="go('s-orders')"><div style="width:44px;height:44px;background:#FFF1EB;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📱</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)">iPhone 16 Pro Max + 2 more</div><div style="font-size:10px;color:var(--mu)">#SHW-9142</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:13px;font-weight:800;color:var(--tx)">₹2,20,810</div><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--orl);color:var(--or)">Out for Delivery</span></div></div>
+        <div class="row" style="padding:12px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:11px" onclick="showToast('Opening order...')"><div style="width:44px;height:44px;background:#FFF8E6;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⌚</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)">Apple Watch Ultra 2 49mm</div><div style="font-size:10px;color:var(--mu)">#SHW-8831</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:13px;font-weight:800;color:var(--tx)">₹89,900</div><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--gnl);color:var(--gn)">Delivered</span></div></div>
+        <div class="row" style="padding:12px 0;cursor:pointer;gap:11px" onclick="showToast('Opening order...')"><div style="width:44px;height:44px;background:#FFF0F5;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🎮</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)">PS5 Slim + DualSense Edge</div><div style="font-size:10px;color:var(--mu)">#SHW-8204</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:13px;font-weight:800;color:var(--tx)">₹56,980</div><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--gnl);color:var(--gn)">Delivered</span></div></div>
+      </div>
+      <div class="sec">
+        <div class="row" style="padding:14px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:13px" onclick="go('s-checkout1')"><span style="font-size:20px;width:28px;text-align:center">📍</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--tx)">Saved Addresses</div><div style="font-size:11px;color:var(--mu)">Palampur · Baddi</div></div><span style="color:var(--mu);font-size:16px">›</span></div>
+        <div class="row" style="padding:14px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:13px" onclick="go('s-checkout2')"><span style="font-size:20px;width:28px;text-align:center">💳</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--tx)">Payment Methods</div><div style="font-size:11px;color:var(--mu)">UPI · Cards · Wallets</div></div><span style="color:var(--mu);font-size:16px">›</span></div>
+        <div class="row" style="padding:14px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:13px" onclick="showToast('ShopWave Prime Active ⭐')"><span style="font-size:20px;width:28px;text-align:center">⭐</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--tx)">ShopWave Prime</div><div style="font-size:11px;color:var(--gn);font-weight:600">Active — Renews Jun 2026</div></div><span style="color:var(--mu);font-size:16px">›</span></div>
+        <div class="row" style="padding:14px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:13px" onclick="showToast('Notification settings')"><span style="font-size:20px;width:28px;text-align:center">🔔</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--tx)">Notifications</div><div style="font-size:11px;color:var(--mu)">Alerts &amp; preferences</div></div><span style="color:var(--mu);font-size:16px">›</span></div>
+        <div class="row" style="padding:14px 0;border-bottom:1px solid var(--br);cursor:pointer;gap:13px" onclick="showToast('Opening Help Centre...')"><span style="font-size:20px;width:28px;text-align:center">❓</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--tx)">Help &amp; Support</div><div style="font-size:11px;color:var(--mu)">FAQs · Chat · Call</div></div><span style="color:var(--mu);font-size:16px">›</span></div>
+        <div class="row" style="padding:14px 0;cursor:pointer;gap:13px" onclick="showToast('Signing out... Goodbye! 👋')"><span style="font-size:20px;width:28px;text-align:center">🚪</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--rd)">Sign Out</div></div><span style="color:var(--mu);font-size:16px">›</span></div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+    <div id="pBn"></div>
+  </div>
+
+  <!-- ════ WISHLIST ════ -->
+  <div class="scr" id="s-wishlist">
+    <div class="st" style="background:var(--wh)"></div>
+    <div class="tb"><div class="tb-t">Wishlist (6)</div><button class="ib" onclick="showToast('Share wishlist link copied!')">⋯</button></div>
+    <div class="sc">
+      <div style="padding:12px;display:flex;flex-direction:column;gap:12px" id="wishList"></div>
+    </div>
+    <div id="wBn"></div>
+  </div>
+
+</div>
+<div class="lbl">ShopWave · iPhone 16 Pro Max Prototype · Open in Chrome / Edge / Safari</div>
+</div>
+<script>
+var ALL=[
+  {e:'📱',n:'Apple iPhone 16 Pro Max 256GB',p:'₹1,34,900',op:'₹1,84,900',off:'27% OFF',r:'4.8',rv:'3.1K',bg:'#FFF1EB',pv:134900,sp:[['Display','6.9" Super Retina XDR OLED, 120Hz'],['Chip','Apple A18 Pro (3nm)'],['Camera','48MP + 48MP UW + 12MP 5× Tele'],['Battery','4,685 mAh · MagSafe · USB-C'],['Build','Grade 5 Titanium · Ceramic Shield']]},
+  {e:'📱',n:'Samsung Galaxy S25 Ultra 512GB',p:'₹1,24,999',op:'₹1,59,999',off:'22% OFF',r:'4.7',rv:'2.4K',bg:'#EBF2FF',pv:124999,sp:[['Display','6.9" Dynamic AMOLED 2X, 120Hz'],['Chip','Snapdragon 8 Elite'],['Camera','200MP + 50MP + 10MP + 12MP'],['Battery','5,000 mAh · 45W fast charge'],['Build','Titanium Frame · Gorilla Glass 7']]},
+  {e:'📱',n:'Google Pixel 9 Pro XL 256GB',p:'₹89,999',op:'₹1,09,999',off:'18% OFF',r:'4.6',rv:'1.2K',bg:'#F0FFF4',pv:89999,sp:[['Display','6.8" LTPO OLED, 120Hz'],['Chip','Google Tensor G4'],['Camera','50MP + 48MP + 48MP Tele'],['Battery','5,060 mAh · 37W charge'],['Build','Polished Aluminium Frame']]},
+  {e:'📱',n:'OnePlus 13 Pro 16GB + 512GB',p:'₹74,999',op:'₹89,999',off:'17% OFF',r:'4.5',rv:'4.6K',bg:'#FFF8E6',pv:74999,sp:[['Display','6.82" LTPO AMOLED, 120Hz'],['Chip','Snapdragon 8 Gen 4'],['Camera','50MP Hasselblad Triple Camera'],['Battery','6,000 mAh · 100W SuperVOOC'],['Build','Nano-crystal AG Glass']]},
+  {e:'💻',n:'MacBook Air M4 13" 16GB 512GB',p:'₹1,19,900',op:'₹1,34,900',off:'11% OFF',r:'4.9',rv:'2.8K',bg:'#F5F5FF',pv:119900,sp:[['Display','13.6" Liquid Retina, 500 nits'],['Chip','Apple M4 (3nm)'],['Memory','16GB Unified Memory'],['Battery','Up to 18 hours'],['Weight','1.24 kg · 11.3mm thin']]},
+  {e:'💻',n:'Dell XPS 15 Core Ultra 9 1TB',p:'₹1,89,990',op:'₹2,29,990',off:'17% OFF',r:'4.6',rv:'876',bg:'#EBF2FF',pv:189990,sp:[['Display','15.6" OLED 3.5K, 60Hz'],['Chip','Intel Core Ultra 9 185H'],['GPU','NVIDIA RTX 4070 8GB'],['Battery','86Whr · 130W charging'],['RAM','32GB DDR5']]},
+  {e:'💻',n:'ASUS ROG Zephyrus G16 RTX 4070',p:'₹2,04,990',op:'₹2,49,990',off:'18% OFF',r:'4.7',rv:'654',bg:'#FFF0F5',pv:204990,sp:[['Display','16" QHD+ OLED, 240Hz'],['Chip','AMD Ryzen 9 8945HS'],['GPU','RTX 4070 12GB GDDR6'],['RAM','32GB DDR5 @ 7500MHz'],['Storage','1TB PCIe Gen4 NVMe']]},
+  {e:'💻',n:'HP Spectre x360 14 OLED Touch',p:'₹1,59,990',op:'₹1,89,990',off:'16% OFF',r:'4.5',rv:'412',bg:'#E6FAFF',pv:159990,sp:[['Display','14" OLED 2.8K Touch, 120Hz'],['Chip','Intel Core Ultra 7 165H'],['Memory','16GB LPDDR5x'],['Battery','17 hours · 65W charging'],['Features','360° hinge · Stylus included']]},
+  {e:'🎧',n:'Sony WH-1000XM6 Noise Cancelling',p:'₹26,990',op:'₹36,990',off:'27% OFF',r:'4.8',rv:'14.2K',bg:'#F5F5F5',pv:26990,sp:[['Driver','40mm Dynamic Driver'],['ANC','Industry-leading ANC v3'],['Battery','30 hrs · 3 min = 3 hr charge'],['Codec','LDAC · AAC · SBC'],['Weight','250g']]},
+  {e:'🎧',n:'Apple AirPods Pro 3rd Generation',p:'₹24,990',op:'₹29,990',off:'17% OFF',r:'4.7',rv:'18.4K',bg:'#FFF8E6',pv:24990,sp:[['Chip','Apple H2'],['ANC','Adaptive Audio · Active NC'],['Battery','6h + 30h with case'],['Features','Hearing Health · Siri'],['Water','IP54 resistance']]},
+  {e:'🎧',n:'Bose QuietComfort 45 Headphones',p:'₹22,490',op:'₹32,490',off:'31% OFF',r:'4.6',rv:'7.1K',bg:'#EBF2FF',pv:22490,sp:[['ANC','Quiet &amp; Aware modes'],['Battery','24 hrs · 15 min quick charge'],['Driver','Premium TriPort acoustic'],['Weight','238g'],['Bluetooth','5.1']]},
+  {e:'🎧',n:'JBL Flip 7 Portable Speaker',p:'₹11,999',op:'₹17,999',off:'33% OFF',r:'4.5',rv:'5.8K',bg:'#F0FFF4',pv:11999,sp:[['Output','30W RMS'],['Battery','12 hours playtime'],['Water','IP67 waterproof'],['Feature','PartyBoost multi-speaker'],['Weight','570g']]},
+  {e:'⌚',n:'Apple Watch Ultra 2 49mm',p:'₹89,900',op:'₹99,900',off:'10% OFF',r:'4.9',rv:'4.3K',bg:'#FFF8E6',pv:89900,sp:[['Display','49mm Always-On Retina LTPO'],['Chip','Apple S9 SiP'],['GPS','L1, L5, Galileo, GLONASS'],['Water','100m depth rated'],['Battery','Up to 60 hours']]},
+  {e:'⌚',n:'Samsung Galaxy Watch 7 Pro 47mm',p:'₹44,999',op:'₹54,999',off:'18% OFF',r:'4.6',rv:'2.1K',bg:'#EBF2FF',pv:44999,sp:[['Display','1.5" Super AMOLED'],['Chip','Exynos W1000'],['Battery','590mAh · 10 days'],['Health','Advanced body composition'],['OS','Wear OS + One UI Watch']]},
+  {e:'📷',n:'Sony Alpha A7 V Full Frame',p:'₹2,99,990',op:'₹3,49,990',off:'14% OFF',r:'4.8',rv:'542',bg:'#FFF0F8',pv:299990,sp:[['Sensor','61MP Full Frame BSI CMOS'],['AF','Phase detect 759 points'],['Video','4K 120fps · 8K 30fps'],['Stabilization','8-stop IBIS'],['Battery','CIPA 800 shots']]},
+  {e:'🎮',n:'Sony PS5 Slim Digital Edition',p:'₹44,990',op:'₹54,990',off:'18% OFF',r:'4.8',rv:'9.2K',bg:'#F5F0FF',pv:44990,sp:[['CPU','AMD Zen 2 · 8 cores 3.5GHz'],['GPU','AMD RDNA 2 · 10.3 TFLOPS'],['Storage','1TB Custom NVMe SSD'],['Resolution','Up to 8K · 120fps'],['Feature','DualSense haptic feedback']]}
+];
+
+var WISH=[ALL[12],ALL[15],ALL[14],ALL[6],ALL[1],ALL[10]];
+
+var cartData=[
+  {idx:0,qty:1,e:'📱',n:'Apple iPhone 16 Pro Max 256GB Desert Titanium',variant:'Desert Titanium · 256GB',pv:134900,dp:'₹1,34,900',old:'₹1,84,900',off:'27% OFF',bg:'#FFF1EB'},
+  {idx:4,qty:1,e:'💻',n:'MacBook Air M4 13" 16GB 512GB Midnight',variant:'Midnight · 512GB SSD',pv:119900,dp:'₹1,19,900',old:'₹1,34,900',off:'11% OFF',bg:'#EBF2FF'},
+  {idx:8,qty:1,e:'🎧',n:'Sony WH-1000XM6 Wireless Headphones Black',variant:'Midnight Black',pv:26990,dp:'₹26,990',old:'₹36,990',off:'27% OFF',bg:'#F0FFF4'}
+];
+
+var addrs=[
+  {lbl:'HOME',name:'Saksham Sharma',line:'47, Neugal Nagar, Near Palampur Bus Stand',city:'Palampur',state:'Himachal Pradesh — 176061',phone:'+91 98765 43210',sel:true},
+  {lbl:'WORK',name:'Saksham Sharma',line:'Tech Hub, Sector 5, IT Park',city:'Baddi',state:'Himachal Pradesh — 173205',phone:'+91 98765 43210',sel:false}
+];
+
+var addrType='H', removeIdx=-1, wished=false, galI=0, banI=0, hist=[];
+var cartN=3;
+
+// ─── HELPERS ───────────────────────────────────────────────────
+function fmt(n){return '\u20b9'+n.toLocaleString('en-IN');}
+function el(id){return document.getElementById(id);}
+function set(id,v){var e=el(id);if(e)e.textContent=v;}
+
+function pCard(p,idx){
+  return '<div class="card" onclick="openDetail('+idx+')" style="position:relative">' +
+    '<div style="height:148px;background:'+p.bg+';display:flex;align-items:center;justify-content:center;font-size:64px;position:relative">'+p.e+
+      '<button class="wb" style="position:absolute;top:8px;right:8px;width:30px;height:30px;font-size:14px;box-shadow:0 1px 6px rgba(0,0,0,.12)" onclick="event.stopPropagation();showToast(\'Saved to Wishlist \u2764\ufe0f\')">🤍</button>'+
+    '</div>' +
+    '<div style="padding:10px 11px 12px">' +
+      '<div style="font-size:12px;font-weight:700;line-height:1.35;height:34px;overflow:hidden;margin-bottom:5px;color:var(--tx)">'+p.n+'</div>' +
+      '<div class="row" style="gap:5px;margin-bottom:5px"><div class="rb" style="font-size:10px;padding:2px 6px">'+p.r+' \u2605</div><span style="font-size:10px;color:var(--mu)">('+p.rv+')</span></div>' +
+      '<div class="row" style="gap:6px;margin-bottom:9px"><span style="font-size:14px;font-weight:800;color:var(--tx)">'+p.p+'</span><span class="tag">'+p.off+'</span></div>' +
+      '<button class="bp" style="width:100%;height:36px;font-size:12px" onclick="event.stopPropagation();addToCart()">+ Add to Cart</button>' +
+    '</div></div>';
+}
+
+function wCard(p){
+  var idx=ALL.indexOf(p);
+  return '<div class="card" style="display:flex;gap:13px;padding:14px">' +
+    '<div style="width:92px;height:92px;background:'+p.bg+';border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:48px;flex-shrink:0;cursor:pointer" onclick="openDetail('+idx+')">'+p.e+'</div>' +
+    '<div style="flex:1;min-width:0">' +
+      '<div style="font-size:13px;font-weight:700;line-height:1.4;margin-bottom:6px;color:var(--tx)">'+p.n+'</div>' +
+      '<div class="row" style="gap:6px;margin-bottom:6px"><div class="rb" style="font-size:11px;padding:2px 7px">'+p.r+' \u2605</div><span style="font-size:11px;color:var(--mu)">('+p.rv+')</span></div>' +
+      '<div class="row" style="gap:8px;margin-bottom:10px"><span style="font-size:16px;font-weight:800;color:var(--tx)">'+p.p+'</span><span style="font-size:11px;color:var(--mu);text-decoration:line-through">'+p.op+'</span><span class="tag">'+p.off+'</span></div>' +
+      '<div style="display:flex;gap:8px">' +
+        '<button class="bp" style="flex:1;height:36px;font-size:12px" onclick="addToCart()">Move to Cart</button>' +
+        '<button style="width:36px;height:36px;border-radius:11px;border:1.5px solid var(--br);background:none;font-size:15px;cursor:pointer" onclick="showToast(\'Removed from Wishlist\')">🗑️</button>' +
+      '</div></div></div>';
+}
+
+function makeBn(active){
+  var tabs=[{ic:'🏠',lb:'Home',sc:'s-home'},{ic:'🔍',lb:'Search',sc:'s-search'},{ic:'❤️',lb:'Wishlist',sc:'s-wishlist'},{ic:'👤',lb:'Profile',sc:'s-profile'}];
+  var h='<div class="bn">';
+  tabs.forEach(function(t,i){
+    var a=i===active;
+    h+='<button class="bni'+(a?' on':'')+'" onclick="go(\''+t.sc+'\')">' +
+      '<span class="bni-ic" style="color:'+(a?'var(--or)':'var(--mu)')+'">'+t.ic+'</span>' +
+      '<span class="bni-lb" style="color:'+(a?'var(--or)':'var(--mu)')+'">'+t.lb+'</span>' +
+    '</button>';
+  });
+  h+='<button class="bni" onclick="go(\'s-cart\')" style="position:relative">' +
+    '<span style="position:relative;display:inline-block">' +
+    '<span class="bni-ic">🛒</span><span class="bdg" style="top:-6px;right:-8px" id="bnBdg">'+cartN+'</span>' +
+    '</span><span class="bni-lb">Cart</span></button></div>';
+  return h;
+}
+
+// ─── CART RENDER ───────────────────────────────────────────────
+function renderCart(){
+  var html='';
+  if(cartData.length===0){
+    html='<div style="padding:60px 20px;text-align:center"><div style="font-size:64px;margin-bottom:16px">🛒</div>' +
+      '<div style="font-size:18px;font-weight:800;color:var(--tx);margin-bottom:8px">Your cart is empty</div>' +
+      '<div style="font-size:13px;color:var(--mu);margin-bottom:24px">Looks like you haven\'t added anything yet.</div>' +
+      '<button class="bp" style="padding:0 32px" onclick="go(\'s-home\')">Start Shopping →</button></div>';
+  } else {
+    cartData.forEach(function(item,i){
+      html+='<div class="sec" style="border-bottom:8px solid var(--bg)">' +
+        '<div class="row" style="gap:12px;align-items:flex-start">' +
+          '<div style="width:84px;height:84px;background:'+item.bg+';border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:42px;flex-shrink:0;cursor:pointer" onclick="openDetail('+item.idx+')">'+item.e+'</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div style="font-size:13px;font-weight:700;line-height:1.4;margin-bottom:4px;color:var(--tx)">'+item.n+'</div>' +
+            '<div style="font-size:11px;color:var(--mu);margin-bottom:8px">'+item.variant+'</div>' +
+            '<div class="row" style="gap:8px"><div style="font-size:17px;font-weight:800;color:var(--tx)">'+item.dp+'</div>' +
+            '<div style="font-size:11px;color:var(--mu);text-decoration:line-through">'+item.old+'</div>' +
+            '<span class="tag">'+item.off+'</span></div>' +
+          '</div>' +
+          '<button style="background:none;border:none;font-size:17px;cursor:pointer;color:var(--mu);padding:4px" onclick="askRemove('+i+')">🗑️</button>' +
+        '</div>' +
+        '<div class="row" style="margin-top:12px;gap:12px">' +
+          '<div class="row" style="gap:10px">' +
+            '<button class="qb" onclick="chQty('+i+',-1)">−</button>' +
+            '<span id="qty'+i+'" style="font-size:15px;font-weight:800;min-width:20px;text-align:center;color:var(--tx)">'+item.qty+'</span>' +
+            '<button class="qb" onclick="chQty('+i+',1)">+</button>' +
+          '</div>' +
+          '<button style="font-size:12px;color:var(--or);background:none;border:none;cursor:pointer;font-weight:800;margin-left:auto;font-family:var(--f)" onclick="showToast(\'Saved to Wishlist \u2764\ufe0f\')">Save for Later</button>' +
+        '</div></div>';
+    });
+  }
+  var ci=el('cartItems'); if(ci) ci.innerHTML=html;
+  updateSummary();
+}
+
+function updateSummary(){
+  var total=0,mrp=0;
+  cartData.forEach(function(item){
+    total+=item.pv*item.qty;
+    var offPct=parseInt(item.off);
+    mrp+=Math.round(item.pv/(1-offPct/100))*item.qty;
+  });
+  var disc=mrp-total;
+  var count=cartData.reduce(function(a,b){return a+b.qty;},0);
+  cartN=count;
+  set('piC',count); set('piMrp',fmt(mrp)); set('piDisc','−'+fmt(disc));
+  set('piTotal',fmt(total+20)); set('piSave','\uD83C\uDF89 Saving '+fmt(disc)+' on this order!');
+  set('cartTitle','My Cart ('+count+')');
+  // Update place btn
+  var pb=el('placeBtn'); if(pb) pb.textContent='\uD83D\uDD12 Place Order — '+fmt(total+20);
+  var pa=el('payAmt'); if(pa) pa.textContent=fmt(total+20);
+  var rt=el('reviewTotal'); if(rt) rt.textContent=fmt(total+20);
+  set('rv1',fmt(mrp)); set('rv2','−'+fmt(disc)); set('rv3',fmt(total+20));
+  allBdg(count);
+  // Review items
+  renderReviewItems();
+}
+
+function renderReviewItems(){
+  var html='';
+  cartData.forEach(function(item){
+    html+='<div class="row" style="gap:11px;padding:10px 0;border-bottom:1px solid var(--br)">' +
+      '<div style="width:50px;height:50px;background:'+item.bg+';border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">'+item.e+'</div>' +
+      '<div style="flex:1;font-size:12px;font-weight:600;color:var(--tx)">'+item.n+'</div>' +
+      '<div style="font-size:14px;font-weight:800;color:var(--tx)">'+item.dp+'</div>' +
+    '</div>';
+  });
+  var ri=el('reviewItems'); if(ri) ri.innerHTML=html;
+}
+
+function allBdg(n){
+  ['hBdg','lBdg','dBdg','bnBdg'].forEach(function(id){var b=el(id);if(b)b.textContent=n;});
+}
+
+// ─── ADDRESS RENDER ────────────────────────────────────────────
+function renderAddrs(){
+  var html='';
+  addrs.forEach(function(a,i){
+    var s=a.sel;
+    html+='<div id="adr'+i+'" style="border:'+(s?'2.5px solid var(--or)':'1.5px solid var(--br)')+
+      ';border-radius:16px;padding:14px;cursor:pointer;margin-bottom:12px;background:'+(s?'var(--orl)':'var(--wh)')+
+      '" onclick="selAddr('+i+')">' +
+      '<div class="row" style="gap:10px;margin-bottom:8px">' +
+        '<span style="font-size:10px;font-weight:800;color:'+(s?'var(--or)':'var(--mu)')+
+          ';background:'+(s?'#fff':'var(--bg)')+';padding:3px 10px;border-radius:20px">'+a.lbl+'</span>' +
+        '<span style="font-size:13px;font-weight:800;color:var(--tx)">'+a.name+'</span>' +
+        (s?'<span style="font-size:12px;color:var(--or);margin-left:auto" onclick="event.stopPropagation();openEditAddr('+i+')">Edit</span>':'') +
+      '</div>' +
+      '<div style="font-size:12px;color:var(--mu);line-height:1.7">'+a.line+'<br>'+a.city+', '+a.state+'<br>' +
+      '<span style="color:var(--tx);font-weight:700">📞 '+a.phone+'</span></div>' +
+      (s?'<div style="margin-top:8px;font-size:11px;color:var(--gn);font-weight:800">✓ Selected for delivery</div>':'') +
+    '</div>';
+  });
+  var sa=el('savedAddrs'); if(sa) sa.innerHTML=html;
+  // Update review address
+  var selA=addrs.find(function(a){return a.sel;});
+  if(selA){
+    var ra=el('reviewAddr');
+    if(ra) ra.innerHTML='<div style="font-size:13px;font-weight:800;margin-bottom:4px;color:var(--tx)">'+selA.name+'</div>' +
+      '<div style="font-size:12px;color:var(--mu);line-height:1.7">'+selA.line+', '+selA.city+' — '+selA.state+'<br>📞 '+selA.phone+'</div>';
+  }
+}
+
+// ─── INIT ──────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',function(){
+  el('hBn').innerHTML=makeBn(0);
+  el('sBn').innerHTML=makeBn(1);
+  el('lBn').innerHTML=makeBn(1);
+  el('pBn').innerHTML=makeBn(3);
+  el('wBn').innerHTML=makeBn(2);
+
+  el('trendGrid').innerHTML=ALL.slice(0,4).map(function(p,i){return pCard(p,i);}).join('');
+  el('laptopGrid').innerHTML=ALL.slice(4,8).map(function(p,i){return pCard(p,i+4);}).join('');
+  el('audioGrid').innerHTML=ALL.slice(8,12).map(function(p,i){return pCard(p,i+8);}).join('');
+  el('listGrid').innerHTML=ALL.map(function(p,i){return pCard(p,i);}).join('');
+  el('simGrid').innerHTML=ALL.slice(1,5).map(function(p,i){return pCard(p,i+1);}).join('');
+  el('wishList').innerHTML=WISH.map(wCard).join('');
+
+  renderCart();
+  renderAddrs();
+
+  // Checkout button — wired ONCE here, NOT inline, prevents loop
+  var cb=el('ctaBtn');
+  if(cb) cb.addEventListener('click',function(){go('s-checkout1');});
+
+  var pb=el('placeBtn');
+  if(pb) pb.addEventListener('click',placeOrder);
+
+  setInterval(rotateBanner,3500);
+});
+
+// ─── NAVIGATION ────────────────────────────────────────────────
+function go(id){
+  var cur=document.querySelector('.scr.active');
+  if(cur&&cur.id!==id){
+    hist.push(cur.id);
+    cur.classList.remove('active');
+    cur.classList.add('out');
+    setTimeout(function(){cur.classList.remove('out');},380);
+  }
+  var next=el(id);
+  if(next){next.classList.add('active');var s=next.querySelector('.sc');if(s)s.scrollTop=0;}
+}
+function goBack(){
+  if(hist.length){var p=hist.pop();var c=document.querySelector('.scr.active');if(c)c.classList.remove('active');var pe=el(p);if(pe)pe.classList.add('active');}
+  else go('s-home');
+}
+
+// ─── TOAST ─────────────────────────────────────────────────────
+var tT;
+function showToast(msg){
+  var t=el('toast');if(!t)return;
+  t.textContent=msg;t.classList.add('on');
+  clearTimeout(tT);tT=setTimeout(function(){t.classList.remove('on');},2400);
+}
+
+// ─── CART ACTIONS ──────────────────────────────────────────────
+function addToCart(){cartN++;allBdg(cartN);showToast('✓ Added to cart!');}
+
+function chQty(i,d){
+  if(i<0||i>=cartData.length)return;
+  if(cartData[i].qty+d<1){askRemove(i);return;}
+  cartData[i].qty+=d;
+  var qe=el('qty'+i);if(qe)qe.textContent=cartData[i].qty;
+  updateSummary();
+  showToast(d>0?'Quantity increased ✓':'Quantity decreased');
+}
+
+function askRemove(i){
+  removeIdx=i;
+  var msg=el('removeMsg');
+  if(msg&&cartData[i])msg.textContent='"'+cartData[i].e+' '+cartData[i].n.slice(0,30)+'..." will be removed.';
+  el('removeM').classList.add('on');
+}
+function closeRemove(){el('removeM').classList.remove('on');removeIdx=-1;}
+function doRemove(){
+  if(removeIdx>=0&&removeIdx<cartData.length){
+    cartData.splice(removeIdx,1);
+    renderCart();
+    showToast('Item removed from cart');
+  }
+  closeRemove();
+}
+
+// ─── WISHLIST ──────────────────────────────────────────────────
+function toggleWish(){
+  wished=!wished;
+  var b=el('wBtn');if(b)b.textContent=wished?'❤️':'🤍';
+  showToast(wished?'Saved to Wishlist ❤️':'Removed from Wishlist');
+}
+
+// ─── PRODUCT DETAIL ────────────────────────────────────────────
+function openDetail(idx){
+  var p=ALL[idx];if(!p)return;
+  set('dTitle',p.n);set('dPrice',p.p);set('dOld','M.R.P '+p.op);
+  set('dTag',p.off);set('dRat',p.r+' ★');set('dRevC',p.rv+' ratings');
+  set('dRatBig',p.r);set('dTotRat',p.rv+' ratings');
+  var gi=el('gImg');if(gi)gi.textContent=p.e;
+  var gt=el('gT0');if(gt)gt.textContent=p.e;
+  if(p.sp){
+    var sh=p.sp.map(function(s){
+      return '<div class="row" style="padding:10px 0;border-bottom:1px solid var(--br)">' +
+        '<span style="font-size:12px;color:var(--mu);width:96px;flex-shrink:0">'+s[0]+'</span>' +
+        '<span style="font-size:12px;font-weight:700;color:var(--tx)">'+s[1]+'</span></div>';
+    }).join('');
+    var ds=el('dSpecs');if(ds)ds.innerHTML=sh;
+  }
+  // Sim grid with different products
+  var simStart=(idx+1)%ALL.length;
+  var simProds=[];
+  for(var i=0;i<4;i++) simProds.push(ALL[(simStart+i)%ALL.length]);
+  var sg=el('simGrid');
+  if(sg)sg.innerHTML=simProds.map(function(pp,i){return pCard(pp,(simStart+i)%ALL.length);}).join('');
+  galTo(0);
+  wished=false;var wb=el('wBtn');if(wb)wb.textContent='🤍';
+  go('s-detail');
+}
+
+// ─── FILTER & SORT ─────────────────────────────────────────────
+function openSheet(){el('ov').classList.add('on');el('sheet').classList.add('on');}
+function closeSheet(){el('ov').classList.remove('on');el('sheet').classList.remove('on');}
+function pickSort(e){document.querySelectorAll('#sortC .chip').forEach(function(c){c.classList.remove('on');});e.classList.add('on');showToast('Sorted: '+e.textContent);}
+function pickRating(e){document.querySelectorAll('#ratingC .chip').forEach(function(c){c.classList.remove('on');});e.classList.add('on');}
+function pickCat(e,cat){e.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});e.classList.add('on');showToast('Category: '+cat);}
+function pickStor(e){
+  el('stOpts').querySelectorAll('button').forEach(function(b){
+    b.style.border='1.5px solid var(--br)';b.style.background='var(--wh)';
+    b.querySelector('div').style.color='var(--tx)';
+  });
+  e.style.border='2.5px solid var(--or)';e.style.background='var(--orl)';
+  e.querySelector('div').style.color='var(--or)';
+  showToast('Storage selected ✓');
+}
+
+// ─── PAYMENT ───────────────────────────────────────────────────
+function pickPay(e){
+  document.querySelectorAll('#payM > div').forEach(function(d){
+    d.style.border='1.5px solid var(--br)';d.style.background='var(--wh)';
+    var r=d.querySelector('.rr');if(r)r.classList.remove('on');
+  });
+  e.style.border='2.5px solid var(--or)';e.style.background='var(--orl)';
+  var r=e.querySelector('.rr');if(r)r.classList.add('on');
+  showToast('Payment: '+e.querySelector('div div').textContent);
+}
+
+// ─── ADDRESS ACTIONS ───────────────────────────────────────────
+function selAddr(i){addrs.forEach(function(a,j){a.sel=j===i;});renderAddrs();showToast('Address selected ✓');}
+
+function openAddAddr(){el('addAddrM').classList.add('on');}
+function closeAddAddr(){el('addAddrM').classList.remove('on');}
+function setType(t){
+  addrType=t;
+  var map={H:'tH',W:'tW',O:'tO'};
+  Object.keys(map).forEach(function(k){var b=el(map[k]);if(b){if(k===t)b.classList.add('on');else b.classList.remove('on');}});
+}
+function saveAddr(){
+  var name=el('aN').value.trim()||'New User';
+  var phone=el('aPh').value.trim()||'+91 00000 00000';
+  var line=el('aL').value.trim()||'Address Line';
+  var city=el('aC').value.trim()||'City';
+  var state=el('aSt').value.trim()||'State — 000000';
+  var lblMap={H:'HOME',W:'WORK',O:'OTHER'};
+  addrs.push({lbl:lblMap[addrType]||'HOME',name:name,line:line,city:city,state:state,phone:phone,sel:false});
+  ['aN','aPh','aL','aC','aSt'].forEach(function(id){var e=el(id);if(e)e.value='';});
+  closeAddAddr();renderAddrs();showToast('Address saved ✓');
+}
+
+function openEditAddr(i){
+  var a=addrs[i];
+  el('eN').value=a.name;el('ePh').value=a.phone;
+  el('eL').value=a.line;el('eC').value=a.city;el('eSt').value=a.state;
+  el('editAddrM').dataset.idx=i;
+  el('editAddrM').classList.add('on');
+}
+function closeEditAddr(){el('editAddrM').classList.remove('on');}
+function saveEditAddr(){
+  var i=parseInt(el('editAddrM').dataset.idx||0);
+  if(addrs[i]){
+    addrs[i].name=el('eN').value||addrs[i].name;
+    addrs[i].phone=el('ePh').value||addrs[i].phone;
+    addrs[i].line=el('eL').value||addrs[i].line;
+    addrs[i].city=el('eC').value||addrs[i].city;
+    addrs[i].state=el('eSt').value||addrs[i].state;
+  }
+  closeEditAddr();renderAddrs();showToast('Address updated ✓');
+}
+
+// ─── ORDER ─────────────────────────────────────────────────────
+function placeOrder(){showToast('Placing your order...');setTimeout(function(){go('s-confirm');},700);}
+
+// ─── SEARCH ────────────────────────────────────────────────────
+function onSearch(v){
+  var c=el('sClr');if(c)c.style.display=v.length?'block':'none';
+  if(v.length>2){setTimeout(function(){var lt=el('listTitle');if(lt)lt.textContent='Results for "'+v+'"';go('s-listing');},600);}
+}
+function clearSearch(){var i=el('sInp');if(i)i.value='';var c=el('sClr');if(c)c.style.display='none';}
+function doSearch(q){
+  var i=el('sInp');if(i)i.value=q;
+  var lt=el('listTitle');if(lt)lt.textContent='Results for "'+q+'"';
+  setTimeout(function(){go('s-listing');},200);
+}
+
+// ─── GALLERY ───────────────────────────────────────────────────
+var gSX=0;
+function gts(e){gSX=e.touches[0].clientX;}
+function gte(e){var dx=e.changedTouches[0].clientX-gSX;if(dx<-40&&galI<2)galI++;else if(dx>40&&galI>0)galI--;galTo(galI);}
+function galTo(i){
+  galI=i;var g=el('gal');if(g)g.style.transform='translateX(-'+(100/3*i)+'%)';
+  document.querySelectorAll('#gDots div').forEach(function(d,j){
+    d.style.width=j===i?'20px':'4px';d.style.background=j===i?'var(--or)':'rgba(0,0,0,.2)';
+  });
+}
+
+// ─── BANNER ────────────────────────────────────────────────────
+function rotateBanner(){
+  var ids=['ban0','ban1','ban2'];var prev=banI;banI=(banI+1)%3;
+  var pe=el(ids[prev]);var ne=el(ids[banI]);
+  if(pe){pe.style.transform='translateX(-100%)';pe.style.opacity='0';}
+  if(ne){ne.style.transform='none';ne.style.opacity='1';}
+  document.querySelectorAll('#banDots div').forEach(function(d,i){
+    d.style.width=i===banI?'20px':'5px';d.style.background=i===banI?'var(--or)':'var(--br)';
+  });
+}
+
+// ─── SWIPE BACK ────────────────────────────────────────────────
+var swX=0;
+el('phone').addEventListener('touchstart',function(e){swX=e.touches[0].clientX;},{passive:true});
+el('phone').addEventListener('touchend',function(e){if(e.changedTouches[0].clientX-swX>65&&swX<55)goBack();},{passive:true});
+</script>
+</body>
+</html>
